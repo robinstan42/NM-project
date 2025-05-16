@@ -1,332 +1,441 @@
+import pandas as pd
+
+def calculate_statistics(df):
+    """Calculate basic statistics for student data."""
+    stats = {
+        'avg_quiz_score': df['quiz_scores'].mean(),
+        'avg_completion_rate': df['completion_rate'].mean(),
+        'avg_engagement_time': df['engagement_time'].mean()
+    }
+    return stats
+
+
+def identify_engagement_trends(df):
+    """Identify trends based on interaction counts and engagement time."""
+    high_engagement = df[df['engagement_time'] > df['engagement_time'].mean()]
+    return high_engagement
+
+
+def score_vs_completion(df):
+    """Correlate quiz scores with course completion rates."""
+    correlation = df['quiz_scores'].corr(df['completion_rate'])
+    return correlation
+
+ import pandas as pd
+
+def load_data(filepath):
+    """Load data from a CSV file."""
+    return pd.read_csv(filepath)
+
+
+def preprocess_data(df):
+    """Clean and preprocess data (e.g., handle missing values)."""
+    df.fillna(df.mean(), inplace=True)  # Fill missing values with column mean
+    return df 
+import pandas as pd
+
+
+def load_data(filepath):
+    """Load data from a CSV file."""
+    return pd.read_csv(filepath)
+
+
+def preprocess_data(df):
+    """Clean and preprocess data (e.g., handle missing values)."""
+    df.fillna(df.mean(), inplace=True)  # Fill missing values with column mean
+    return df
+
+
+import pandas as pd
+
+def load_data(filepath):
+    """Load data from a CSV file."""
+    return pd.read_csv(filepath)
+
+def preprocess_data(df):
+
+    """Clean and preprocess data (e.g., handle missing values)."""
+    df.fillna(df.mean(), inplace=True)  # Fill missing values with column mean
+    return df
+
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from src.analysis import calculate_statistics, identify_engagement_trends, score_vs_completion
+
+
+def display_statistics(df):
+    stats = calculate_statistics(df)
+
+ 
+
+     s
+
+
+t.subheader("Basic Statistics")
+
+    for stat, value in stats.items():
+        st.write(f"{stat.replace('_', ' ').title()}: {value:.2f}")
+
+
+def plot_engagement_distribution(df):
+
+    """Plot engagement time distribution."""
+    st.subheader("Engagement Time Distribution")
+    fig, ax = plt.subplots()
+    sns.histplot(df['engagement_time'], kde=True, ax=ax)
+    st.pyplot(fig)
+
+
+def plot_score_vs_completion(df):
+
+    """Scatter plot of quiz scores against completion rates."""
+    st.subheader("Quiz Scores vs Completion Rates")
+    fig, ax = plt.subplots()
+    sns.scatterplot(data=df, x='quiz_scores', y='completion_rate', ax=ax)
+    ax.set_xlabel("Quiz Scores")
+    ax.set_ylabel("Completion Rate")
+    st.pyplot(fig)
+
+    
+def run_dashboard(df):
+    """Main function to run the Streamlit dashboard."""
+    st.title("E-Learning Platform Analytics Dashboard")
+
+    # Display statistics
+    display_statistics(df)
+
+
+    # Plot engagement distribution
+    plot_engagement_distribution(df)
+
+
+    # Plot score vs completion correlation
+    plot_score_vs_completion(df)
+
+    
+    # Display correlation between scores and completion rate
+    st.subheader("Score and Completion Correlation")
+    correlation = score_vs_completion(df)
+    st.write(f"Correlation between Quiz Scores and Completion Rate: {correlation:.2f}")
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Personalized E-learning with Analytics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Personalized E-Learning Experience</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
     margin: 0;
-    padding: 1rem 2rem;
+    font-family: 'Inter', sans-serif;
+    background: #f0f3f7;
     color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
   }
-  h1 {
+
+  header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 1rem;
+    color: white;
     text-align: center;
-    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1.25rem;
+    user-select: none;
   }
+
+  main {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem;
+    background: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
   section {
-    background: #fff;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 2rem auto;
-    max-width: 900px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
   }
+
   h2 {
-    color: #34495e;
+    margin-top: 0;
+    font-weight: 600;
+    color: #4a4a4a;
+  }
+
+  .lesson-content {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    padding: 0.5rem;
+    background: #e7eafc;
+    border-radius: 6px;
+    border: 1px solid #ccd5ff;
+  }
+
+  .quiz {
+    margin-top: 0.75rem;
+  }
+
+  .quiz-question {
+    font-weight: 600;
     margin-bottom: 0.5rem;
   }
-  p {
-    margin-top: 0;
-    color: #555;
-    font-size: 1rem;
-  }
-  canvas {
-    max-width: 100%;
-    height: 320px;
-    margin-top: 1rem;
-  }
-  footer {
-    text-align: center;
-    margin: 3rem 0 1rem;
-    color: #888;
+
+  label {
+    display: block;
+    margin-bottom: 0.35rem;
+    cursor: pointer;
+    user-select: none;
     font-size: 0.9rem;
+  }
+
+  input[type="radio"] {
+    margin-right: 0.6rem;
+    cursor: pointer;
+  }
+
+  button {
+    margin-top: 0.8rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+
+  button:hover:not(:disabled) {
+    background: #564dcf;
+  }
+
+  button:disabled {
+    background: #b3b7f9;
+    cursor: default;
+  }
+
+  .analytics {
+    background: #f7f7f7;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+
+  .analytics div {
+    margin-bottom: 0.5rem;
+  }
+
+  .recommendation {
+    padding: 1rem;
+    background: #e0f7fa;
+    color: #00796b;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* Scrollbar styling for modern browsers */
+  main::-webkit-scrollbar {
+    width: 6px;
+  }
+  main::-webkit-scrollbar-thumb {
+    background: #b0b5ff;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 400px) {
+    body {
+      max-width: 100vw;
+      border-radius: 0;
+      border: none;
+      min-height: 600px;
+    }
   }
 </style>
 </head>
 <body>
-  <h1>Personalizing E-learning Experiences Using Analytics</h1>
+<header>
+  Personalized E-Learning Experience
+</header>
+<main>
+  <section id="lesson-section" aria-label="Lesson content and quiz">
+    <h2>Lesson: Introduction to Programming</h2>
+    <div class="lesson-content" id="lesson-content" tabindex="0">
+      Programming is the process of creating a set of instructions that tell a computer how to perform a task. It can be done using various languages such as Python, JavaScript, and more.
+    </div>
 
-  <section id="engagement-metrics">
-    <h2>1. Understanding Student Engagement Metrics</h2>
-    <p>Visualizing engagement levels across different learning activities over time.</p>
-    <canvas id="engagementChart"></canvas>
+    <form id="quiz-form" class="quiz" aria-label="Quiz about the lesson">
+      <div class="quiz-question" id="quiz-question1">1. What is programming?</div>
+      <label><input type="radio" name="q1" value="a" /> Writing instructions for a computer</label>
+      <label><input type="radio" name="q1" value="b" /> Painting a picture</label>
+      <label><input type="radio" name="q1" value="c" /> Cooking food</label>
+
+      <button type="button" id="submit-quiz" aria-live="polite" aria-describedby="quiz-feedback">Submit Quiz</button>
+    </form>
+    <div id="quiz-feedback" role="status" aria-atomic="true" style="margin-top:0.5rem; font-weight:600;"></div>
   </section>
 
-  <section id="engagement-performance">
-    <h2>2. Correlation Between Engagement & Performance</h2>
-    <p>Showing how engagement relates to academic performance among students.</p>
-    <canvas id="correlationChart"></canvas>
+  <section id="analytics-section" aria-label="Student engagement and performance analytics">
+    <h2>Your Analytics</h2>
+    <div class="analytics" id="analytics-display" tabindex="0">
+      <div>Time on lesson: <span id="time-spent">0</span> seconds</div>
+      <div>Quiz attempts: <span id="quiz-attempts">0</span></div>
+      <div>Quiz score: <span id="quiz-score">0%</span></div>
+    </div>
   </section>
 
-  <section id="adaptive-learning-impact">
-    <h2>3. Impact of Adaptive Learning Technologies</h2>
-    <p>Comparing student outcomes before and after adaptive learning implementation.</p>
-    <canvas id="adaptiveChart"></canvas>
+  <section id="recommendation-section" aria-label="Personalized recommendation">
+    <h2>Personalized Recommendation</h2>
+    <div class="recommendation" id="recommendation-text" tabindex="0">
+      Please read the lesson and take the quiz to see your personalized recommendation!
+    </div>
   </section>
+</main>
 
-  <section id="case-studies">
-    <h2>4. Case Study: Traditional vs Personalized Learning Outcomes</h2>
-    <p>Comparison of average grades and retention rates between traditional and personalized learning.</p>
-    <canvas id="caseStudyChart"></canvas>
-  </section>
+<script>
+  (() => {
+    // Engagement tracking variables
+    let lessonStartTime = null;
+    let lessonEndTime = null;
+    let timeOnLesson = 0;
+    let quizAttempts = 0;
+    let quizScore = 0;
 
-  <section id="future-trends">
-    <h2>5. Future Trends in Personalized E-Learning</h2>
-    <p>Projected adoption growth of personalized learning technologies.</p>
-    <canvas id="futureTrendChart"></canvas>
-  </section>
+    const lessonContentElem = document.getElementById('lesson-content');
+    const quizForm = document.getElementById('quiz-form');
+    const submitQuizBtn = document.getElementById('submit-quiz');
+    const feedbackElem = document.getElementById('quiz-feedback');
+    const timeSpentElem = document.getElementById('time-spent');
+    const quizAttemptsElem = document.getElementById('quiz-attempts');
+    const quizScoreElem = document.getElementById('quiz-score');
+    const recommendationTextElem = document.getElementById('recommendation-text');
 
-  <footer>
-    &copy; 2024 Personalized E-learning Analytics Project
-  </footer>
-
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // 1. Student Engagement Metrics (line chart showing engagement level per activity over weeks)
-    const engagementCtx = document.getElementById('engagementChart').getContext('2d');
-    const engagementChart = new Chart(engagementCtx, {
-      type: 'line',
-      data: {
-        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-        datasets: [
-          {
-            label: 'Video Lectures',
-            data: [70, 75, 80, 78, 85, 90],
-            borderColor: '#2980b9',
-            backgroundColor: 'rgba(41, 128, 185, 0.2)',
-            fill: true,
-            tension: 0.3,
-          },
-          {
-            label: 'Quizzes',
-            data: [60, 65, 70, 72, 75, 78],
-            borderColor: '#27ae60',
-            backgroundColor: 'rgba(39, 174, 96, 0.2)',
-            fill: true,
-            tension: 0.3,
-          },
-          {
-            label: 'Discussions',
-            data: [40, 45, 55, 60, 65, 70],
-            borderColor: '#c0392b',
-            backgroundColor: 'rgba(192, 57, 43, 0.2)',
-            fill: true,
-            tension: 0.3,
-          },
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Engagement Levels by Activity (0-100 scale)'
-          },
-          legend: {
-            position: 'top',
-          },
-        },
-        scales: {
-          y: {
-            min: 0,
-            max: 100,
-            title: {
-              display: true,
-              text: 'Engagement Score'
-            }
-          }
-        }
-      },
-    });
-
-    // 2. Correlation Between Engagement & Performance (scatter plot)
-    const correlationCtx = document.getElementById('correlationChart').getContext('2d');
-    const correlationData = {
-      labels: Array.from({length: 15}, (_, i) => `Student ${i+1}`),
-      datasets: [{
-        label: 'Engagement vs Performance',
-        data: [
-          {x: 50, y: 55}, {x: 60, y: 62}, {x: 70, y: 75}, {x: 65, y: 68}, {x: 80, y: 82},
-          {x: 55, y: 60}, {x: 85, y: 88}, {x: 90, y: 95}, {x: 40, y: 50}, {x: 72, y: 78},
-          {x: 68, y: 70}, {x: 77, y: 85}, {x: 59, y: 60}, {x: 82, y: 87}, {x: 60, y: 65}
-        ],
-        backgroundColor: '#8e44ad',
-      }]
-    };
-    const correlationChart = new Chart(correlationCtx, {
-      type: 'scatter',
-      data: correlationData,
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Student Engagement vs Academic Performance'
-          },
-          tooltip: {
-            callbacks: {
-              label: (context) => {
-                return `Engagement: ${context.parsed.x}, Performance: ${context.parsed.y}`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Engagement Score (0-100)'
-            },
-            min: 30,
-            max: 100,
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Performance Score (0-100)'
-            },
-            min: 30,
-            max: 100,
-          }
-        }
+    // Start timing when lesson content is focused or hovered
+    function startLessonTimer() {
+      if (!lessonStartTime) {
+        lessonStartTime = Date.now();
       }
-    });
+    }
 
-    // 3. Impact of Adaptive Learning (bar chart before vs after)
-    const adaptiveCtx = document.getElementById('adaptiveChart').getContext('2d');
-    const adaptiveChart = new Chart(adaptiveCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Math', 'Science', 'Literature', 'History', 'Art'],
-        datasets: [
-          {
-            label: 'Before Adaptive Learning',
-            data: [68, 70, 65, 60, 62],
-            backgroundColor: '#e74c3c',
-          },
-          {
-            label: 'After Adaptive Learning',
-            data: [82, 85, 78, 75, 77],
-            backgroundColor: '#27ae60',
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Performance Before & After Adaptive Learning Implementation'
-          },
-          legend: {
-            position: 'top',
-          },
-        },
-        scales: {
-          y: {
-            min: 0,
-            max: 100,
-            title: {
-              display: true,
-              text: 'Average Score'
-            }
-          }
-        }
+    // Pause timing when user leaves lesson content
+    function pauseLessonTimer() {
+      if (lessonStartTime) {
+        lessonEndTime = Date.now();
+        timeOnLesson += Math.floor((lessonEndTime - lessonStartTime) / 1000);
+        lessonStartTime = null;
+        updateAnalyticsDisplay();
+        updateRecommendation();
       }
-    });
+    }
 
-    // 4. Case Study: Traditional vs Personalized Learning Outcomes (mixed bar chart)
-    const caseStudyCtx = document.getElementById('caseStudyChart').getContext('2d');
-    const caseStudyChart = new Chart(caseStudyCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Average Grade', 'Retention Rate (%)', 'Satisfaction Score'],
-        datasets: [
-          {
-            label: 'Traditional Learning',
-            data: [70, 72, 65],
-            backgroundColor: '#34495e',
-          },
-          {
-            label: 'Personalized Learning',
-            data: [85, 88, 85],
-            backgroundColor: '#1abc9c',
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Traditional vs Personalized Learning Outcomes'
-          },
-          legend: {
-            position: 'top',
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 100,
-          }
-        }
+    lessonContentElem.addEventListener('mouseenter', startLessonTimer);
+    lessonContentElem.addEventListener('focus', startLessonTimer);
+    lessonContentElem.addEventListener('mouseleave', pauseLessonTimer);
+    lessonContentElem.addEventListener('blur', pauseLessonTimer);
+
+    // Also stop timer when submitting quiz (as they move on)
+    submitQuizBtn.addEventListener('click', () => {
+      // Pause any ongoing time record on lesson
+      pauseLessonTimer();
+
+      const formData = new FormData(quizForm);
+      const answer = formData.get('q1');
+
+      if (!answer) {
+        feedbackElem.textContent = 'Please choose an answer!';
+        return;
       }
-    });
 
-    // 5. Future Trends in Personalized E-learning (line chart projection)
-    const futureTrendCtx = document.getElementById('futureTrendChart').getContext('2d');
-    const futureTrendChart = new Chart(futureTrendCtx, {
-      type: 'line',
-      data: {
-        labels: ['2024', '2025', '2026', '2027', '2028', '2029'],
-        datasets: [
-          {
-            label: 'Adoption of AI-based Adaptive Systems (%)',
-            data: [10, 25, 40, 55, 70, 85],
-            borderColor: '#2980b9',
-            backgroundColor: 'rgba(41, 128, 185, 0.2)',
-            fill: true,
-            tension: 0.3,
-          },
-          {
-            label: 'Personalized Learning Platforms (%)',
-            data: [15, 28, 45, 60, 75, 90],
-            borderColor: '#27ae60',
-            backgroundColor: 'rgba(39, 174, 96, 0.2)',
-            fill: true,
-            tension: 0.3,
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Projected Growth in Personalized E-learning Technologies'
-          },
-          legend: {
-            position: 'top',
-          },
-        },
-        scales: {
-          y: {
-            min: 0,
-            max: 100,
-            title: {
-              display: true,
-              text: 'Adoption Rate (%)'
-            }
-          }
-        }
+      quizAttempts++;
+      let correct = false;
+      if (answer === 'a') {
+        correct = true;
+        quizScore = Math.round(((quizScore * (quizAttempts - 1)) + 100) / quizAttempts);
+        feedbackElem.textContent = 'Correct! Well done.';
+      } else {
+        quizScore = Math.round((quizScore * (quizAttempts - 1)) / quizAttempts);
+        feedbackElem.textContent = 'Incorrect. The correct answer is: Writing instructions for a computer.';
       }
+
+      updateAnalyticsDisplay();
+      updateRecommendation();
+      // Disable submit button until user chooses another option
+      submitQuizBtn.disabled = true;
+
+      // Clear selection after short delay to allow further attempts
+      setTimeout(() => {
+        quizForm.reset();
+        feedbackElem.textContent = '';
+        submitQuizBtn.disabled = false;
+      }, 2200);
     });
 
-  </script>
+    // Update analytics display
+    function updateAnalyticsDisplay() {
+      timeSpentElem.textContent = timeOnLesson;
+      quizAttemptsElem.textContent = quizAttempts;
+      quizScoreElem.textContent = quizAttempts === 0 ? '0%' : quizScore + '%';
+    }
+
+    // Personalization logic for recommendation
+    function updateRecommendation() {
+      const engagedEnough = timeOnLesson >= 30; // 30 seconds reading
+      const scoredAbove80 = quizScore >= 80;
+      let text = '';
+
+      if (!engagedEnough && quizAttempts === 0) {
+        text = 'Try spending more time reading the lesson before attempting the quiz.';
+      } else if (engagedEnough && quizAttempts === 0) {
+        text = 'Great job on studying! Now try the quiz to test your knowledge.';
+      } else if (quizAttempts > 0 && !scoredAbove80) {
+        text = 'Keep practicing! Review the lesson again to improve your score.';
+      } else if (quizAttempts > 0 && scoredAbove80) {
+        text = 'Excellent work! You are ready to move to the next lesson.';
+      } else {
+        text = 'Engage with the lesson and quiz to get personalized recommendations.';
+      }
+
+      recommendationTextElem.textContent = text;
+    }
+
+    // Responsive viewport fix for mobile zoom on focus
+    function fixViewportOnFocus() {
+      const viewportMeta = document.querySelector('meta[name=viewport]');
+      if (!viewportMeta) return;
+      let originalContent = viewportMeta.getAttribute('content');
+
+      window.addEventListener('focusin', (e) => {
+        viewportMeta.setAttribute('content', originalContent + ', user-scalable=0');
+      });
+
+      window.addEventListener('focusout', (e) => {
+        viewportMeta.setAttribute('content', originalContent);
+      });
+    }
+
+    fixViewportOnFocus();
+
+  })();
+</script>
 </body>
 </html>
+</content>
+</create_file>
