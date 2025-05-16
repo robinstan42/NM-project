@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Personalized E-learning with Analytics</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 1rem 2rem;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 900px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  h2 {
+    color: #34495e;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    margin-top: 0;
+    color: #555;
+    font-size: 1rem;
+  }
+  canvas {
+    max-width: 100%;
+    height: 320px;
+    margin-top: 1rem;
+  }
+  footer {
+    text-align: center;
+    margin: 3rem 0 1rem;
+    color: #888;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+  <h1>Personalizing E-learning Experiences Using Analytics</h1>
+
+  <section id="engagement-metrics">
+    <h2>1. Understanding Student Engagement Metrics</h2>
+    <p>Visualizing engagement levels across different learning activities over time.</p>
+    <canvas id="engagementChart"></canvas>
+  </section>
+
+  <section id="engagement-performance">
+    <h2>2. Correlation Between Engagement & Performance</h2>
+    <p>Showing how engagement relates to academic performance among students.</p>
+    <canvas id="correlationChart"></canvas>
+  </section>
+
+  <section id="adaptive-learning-impact">
+    <h2>3. Impact of Adaptive Learning Technologies</h2>
+    <p>Comparing student outcomes before and after adaptive learning implementation.</p>
+    <canvas id="adaptiveChart"></canvas>
+  </section>
+
+  <section id="case-studies">
+    <h2>4. Case Study: Traditional vs Personalized Learning Outcomes</h2>
+    <p>Comparison of average grades and retention rates between traditional and personalized learning.</p>
+    <canvas id="caseStudyChart"></canvas>
+  </section>
+
+  <section id="future-trends">
+    <h2>5. Future Trends in Personalized E-Learning</h2>
+    <p>Projected adoption growth of personalized learning technologies.</p>
+    <canvas id="futureTrendChart"></canvas>
+  </section>
+
+  <footer>
+    &copy; 2024 Personalized E-learning Analytics Project
+  </footer>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // 1. Student Engagement Metrics (line chart showing engagement level per activity over weeks)
+    const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+    const engagementChart = new Chart(engagementCtx, {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+        datasets: [
+          {
+            label: 'Video Lectures',
+            data: [70, 75, 80, 78, 85, 90],
+            borderColor: '#2980b9',
+            backgroundColor: 'rgba(41, 128, 185, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Quizzes',
+            data: [60, 65, 70, 72, 75, 78],
+            borderColor: '#27ae60',
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Discussions',
+            data: [40, 45, 55, 60, 65, 70],
+            borderColor: '#c0392b',
+            backgroundColor: 'rgba(192, 57, 43, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Engagement Levels by Activity (0-100 scale)'
+          },
+          legend: {
+            position: 'top',
+          },
+        },
+        scales: {
+          y: {
+            min: 0,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Engagement Score'
+            }
+          }
+        }
+      },
+    });
+
+    // 2. Correlation Between Engagement & Performance (scatter plot)
+    const correlationCtx = document.getElementById('correlationChart').getContext('2d');
+    const correlationData = {
+      labels: Array.from({length: 15}, (_, i) => `Student ${i+1}`),
+      datasets: [{
+        label: 'Engagement vs Performance',
+        data: [
+          {x: 50, y: 55}, {x: 60, y: 62}, {x: 70, y: 75}, {x: 65, y: 68}, {x: 80, y: 82},
+          {x: 55, y: 60}, {x: 85, y: 88}, {x: 90, y: 95}, {x: 40, y: 50}, {x: 72, y: 78},
+          {x: 68, y: 70}, {x: 77, y: 85}, {x: 59, y: 60}, {x: 82, y: 87}, {x: 60, y: 65}
+        ],
+        backgroundColor: '#8e44ad',
+      }]
+    };
+    const correlationChart = new Chart(correlationCtx, {
+      type: 'scatter',
+      data: correlationData,
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Student Engagement vs Academic Performance'
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                return `Engagement: ${context.parsed.x}, Performance: ${context.parsed.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Engagement Score (0-100)'
+            },
+            min: 30,
+            max: 100,
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Performance Score (0-100)'
+            },
+            min: 30,
+            max: 100,
+          }
+        }
+      }
+    });
+
+    // 3. Impact of Adaptive Learning (bar chart before vs after)
+    const adaptiveCtx = document.getElementById('adaptiveChart').getContext('2d');
+    const adaptiveChart = new Chart(adaptiveCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Math', 'Science', 'Literature', 'History', 'Art'],
+        datasets: [
+          {
+            label: 'Before Adaptive Learning',
+            data: [68, 70, 65, 60, 62],
+            backgroundColor: '#e74c3c',
+          },
+          {
+            label: 'After Adaptive Learning',
+            data: [82, 85, 78, 75, 77],
+            backgroundColor: '#27ae60',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Performance Before & After Adaptive Learning Implementation'
+          },
+          legend: {
+            position: 'top',
+          },
+        },
+        scales: {
+          y: {
+            min: 0,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Average Score'
+            }
+          }
+        }
+      }
+    });
+
+    // 4. Case Study: Traditional vs Personalized Learning Outcomes (mixed bar chart)
+    const caseStudyCtx = document.getElementById('caseStudyChart').getContext('2d');
+    const caseStudyChart = new Chart(caseStudyCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Average Grade', 'Retention Rate (%)', 'Satisfaction Score'],
+        datasets: [
+          {
+            label: 'Traditional Learning',
+            data: [70, 72, 65],
+            backgroundColor: '#34495e',
+          },
+          {
+            label: 'Personalized Learning',
+            data: [85, 88, 85],
+            backgroundColor: '#1abc9c',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Traditional vs Personalized Learning Outcomes'
+          },
+          legend: {
+            position: 'top',
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+          }
+        }
+      }
+    });
+
+    // 5. Future Trends in Personalized E-learning (line chart projection)
+    const futureTrendCtx = document.getElementById('futureTrendChart').getContext('2d');
+    const futureTrendChart = new Chart(futureTrendCtx, {
+      type: 'line',
+      data: {
+        labels: ['2024', '2025', '2026', '2027', '2028', '2029'],
+        datasets: [
+          {
+            label: 'Adoption of AI-based Adaptive Systems (%)',
+            data: [10, 25, 40, 55, 70, 85],
+            borderColor: '#2980b9',
+            backgroundColor: 'rgba(41, 128, 185, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Personalized Learning Platforms (%)',
+            data: [15, 28, 45, 60, 75, 90],
+            borderColor: '#27ae60',
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            fill: true,
+            tension: 0.3,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Projected Growth in Personalized E-learning Technologies'
+          },
+          legend: {
+            position: 'top',
+          },
+        },
+        scales: {
+          y: {
+            min: 0,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Adoption Rate (%)'
+            }
+          }
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
+
